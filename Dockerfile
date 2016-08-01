@@ -15,7 +15,7 @@ RUN locale-gen en_US.UTF-8
 CMD ["/sbin/my_init"]
 
 # Correct user and group uid/guid
-RUN usermod -u 99 nobody && \
+RUN usermod -u 1100 nobody && \
     usermod -g 100 nobody && \
     usermod -d /config nobody
 
@@ -24,7 +24,7 @@ RUN apt-get update
 RUN apt-get -y upgrade
 
 # dependicies of airvideo
-RUN apt-get -y --no-install-recommends install libmp3lame0 libx264-dev libfaac0 faac openjdk-6-jre avahi-daemon ttf-wqy-microhei fonts-dejavu curl
+RUN apt-get -y --no-install-recommends install libmp3lame0 libx264-dev libfaac0 faac openjdk-7-jre avahi-daemon ttf-wqy-microhei fonts-dejavu curl
 
 # airvideo server's files
 ADD AirVideoServerLinux.properties /opt/airvideo-server/
@@ -33,15 +33,15 @@ RUN curl -s http://s3.amazonaws.com/AirVideo/Linux-2.4.6-beta3/AirVideoServerLin
 RUN mkdir -p /opt/airvideo-server/bin
 
 # compile avconv
-RUN apt-get install -y build-essential libmp3lame-dev libfaac-dev yasm pkg-config && \
+RUN apt-get install -y build-essential libmp3lame-dev libfaac-dev libtheora-dev libvorbis-dev librtmp-dev libvpx-dev libopencore-amrnb-dev libopencore-amrwb-dev libxvidcore-dev libvo-aacenc-dev libvo-amrwbenc-dev yasm pkg-config && \
 	    cd /tmp && \
 	    curl -s http://s3.amazonaws.com/AirVideo/Linux-2.4.6-beta3/libav.tar.bz2 -o libav.tar.bz2 && \
 	    tar xf libav.tar.bz2 && \
 	    cd libav && \
-	    ./configure --enable-pthreads --disable-shared --enable-static --enable-gpl --enable-libx264 --enable-libmp3lame --enable-nonfree --enable-libfaac && \
+	    ./configure --enable-pthreads --disable-shared --enable-static --enable-gpl --enable-libx264 --enable-libmp3lame --enable-nonfree --enable-encoder=libfaac --enable-runtime-cpudetect --enable-pic --enable-sram --enable-libtheora --enable-libvorbis --enable-libvpx --enable-librtmp --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-version3 --enable-libxvid --enable-libvo-aacenc --enable-libvo-amrwbenc && \
 	    make -j4 && \
 	    strip -s -o /opt/airvideo-server/bin/avconv /tmp/libav/avconv && \
-	    apt-get purge -y build-essential libmp3lame-dev libfaac-dev yasm pkg-config && \
+	    apt-get purge -y build-essential libmp3lame-dev libfaac-dev libtheora-dev libvorbis-dev librtmp-dev libvpx-dev libopencore-amrnb-dev libopencore-amrwb-dev libxvidcore-dev libvo-aacenc-dev libvo-amrwbenc-dev yasm pkg-config && \
 	    apt-get autoremove -y && \
 	    apt-get autoclean && \
 	    rm -rf /tmp/libav.tar.bz2 /tmp/libav
