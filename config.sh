@@ -8,7 +8,7 @@ if [[ ! -f ${CONFIG_DIR}"/AirVideoServerLinux.properties" ]]; then
 fi
 
 if [[ -n ${FOLDERS} ]]; then
-	sed -i -e "s#\(folders =\).*# \1 ${FOLDERS}#g" ${CONFIG_DIR}"/AirVideoServerLinux.properties"
+	sed -i -e "s#\(folders =\).*#\1 ${FOLDERS}#g" ${CONFIG_DIR}"/AirVideoServerLinux.properties"
 fi
 
 chown -R nobody:users /config
