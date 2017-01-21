@@ -12,3 +12,4 @@ if [[ -n ${FOLDERS} ]]; then
 fi
 
 chown -R nobody:users /config
+rm -f /var/run/avahi-daemon/pid
